@@ -16,10 +16,10 @@ import arcpy, sys, os
 arcpy.env.overwriteOutput = True
 
 #%% Import a single file as a file object
-# Set input variables (Hard-wired)
-inputFolder = 'V:/ARGOSTracking/ARGOSTracking/data/ARGOSData'
-outputSR = arcpy.SpatialReference(54002)
-outputFC = "V:/ARGOSTracking/ARGOSTracking/scratch/ARGOStrack.shp"
+# Set input variables (user input)
+inputFolder = arcpy.GetParameterAsText(0)
+outputSR = arcpy.GetParameterAsText(1)
+outputFC = arcpy.GetParameterAsText(2)
 
 # Create a list of files in the user provided input folder
 inputFiles = os.listdir(inputFolder)
@@ -43,7 +43,7 @@ for inputFile in inputFiles:
     if inputFile == 'README.txt': continue
 
     #Give user some status
-    print(f'Working on file {inputFile}')
+    arcpy.AddMessage(f'Working on file {inputFile}')
     
     #Prepend input file with path
     inputFile = os.path.join(inputFolder,inputFile)
