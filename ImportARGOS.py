@@ -12,11 +12,18 @@
 
 #%% Import Packages
 import arcpy, sys, os
+#Allow arcpy to overwrite output
+arcpy.env.overwriteOutput = True
 
 #%% Import a single file as a file object
 # Set input variables (Hard-wired)
 inputFile = 'V:/ARGOSTracking/ARGOSTracking/data/ARGOSData/1997dg.txt'
 outputFC = "V:/ARGOSTracking/ARGOSTracking/scratch/ARGOStrack.shp"
+
+## Prepare a new feature class to which we'll add tracking points
+# Create an empty feature class; requires the path and name as separate paramters
+outPath,outName = os.path.split(outputFC)
+arcpy.CreateFeatureclass_management(outPath, outName)
 
 #%% Construct a while loop to iterate through all lines in the datafile
 # Open the ARGOS data file for reading
@@ -36,9 +43,6 @@ while lineString:
         
         # Extract attributes from the datum header line
         tagID = lineData[0]
-        obsDate = lineData[3]
-        obsTime = lineData[4]
-        obsLC = lineData[7]
         
         # Extract location info from the next line
         line2String = inputFileObj.readline()
@@ -49,6 +53,10 @@ while lineString:
         # Extract the date we need to variables
         obsLat = line2Data[2]
         obsLon= line2Data[5]
+        
+        obsDate = lineData[3]
+        obsTime = lineData[4]
+        obsLC = lineData[7]
         
         # Print results to see how we're doing
         print (tagID,obsDate,obsTime,obsLC,"Lat:"+obsLat,"Long:"+obsLon)
